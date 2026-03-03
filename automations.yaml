@@ -54,7 +54,8 @@
   mode: single
 - id: '1708472370553'
   alias: Stop bedroom speaker when bedroom sleeper awake
-  description: ''
+  description: Stops and clears the bedroom speakers 6 minutes after the sleeper input
+    boolean turns off, giving time to fully wake up before cutting the music.
   triggers:
   - entity_id:
     - input_boolean.sleeper_in_bedroom
@@ -80,7 +81,8 @@
   mode: single
 - id: '1711377604136'
   alias: Assist Play song by artist now
-  description: ''
+  description: Voice assistant command handler - plays a requested song by artist
+    immediately on the home speaker group.
   triggers:
   - command:
     - play {song} by {artist}
@@ -96,20 +98,11 @@
       media_id: '{{ trigger.slots.song  }}'
       artist: '{{ trigger.slots.artist  }}'
     action: music_assistant.play_media
-  - target:
-      entity_id:
-      - media_player.group_mass_home_group_speakers
-    data:
-      media_type: track
-      enqueue: add
-      media_id: '{{ found_song.tracks.0.name }}'
-      radio_mode: true
-    action: mass.play_media
-    enabled: false
   mode: single
 - id: '1711565389493'
   alias: Assist Restart Music Assistant
-  description: ''
+  description: Voice assistant command handler - restarts the Music Assistant beta
+    addon on demand.
   trigger:
   - platform: conversation
     command: Restart Music Assistant
@@ -122,7 +115,8 @@
   mode: single
 - id: '1713378517441'
   alias: Lock front door when it is closed for 5 seconds
-  description: ''
+  description: Automatically locks the front door 5 seconds after it closes, ensuring
+    it is never left unlocked.
   trigger:
   - platform: state
     entity_id:
@@ -148,7 +142,8 @@
   mode: single
 - id: '1713378679048'
   alias: Lock front door 5 minutes after unlocking
-  description: ''
+  description: Re-locks the front door 5 minutes after it was unlocked, provided
+    the door is already closed. Prevents accidentally leaving the door unlocked.
   trigger:
   - platform: state
     entity_id:
@@ -171,7 +166,9 @@
   mode: single
 - id: '1713378916074'
   alias: Alert that the front door remained open
-  description: ''
+  description: Sends a repeated broadcast alert every 5 minutes while the front door
+    has been open for more than 3 minutes. Paused automatically when aerating-apartment
+    mode is active.
   triggers:
   - entity_id:
     - binary_sensor.sensor_front_door_contact
@@ -190,7 +187,7 @@
       sequence:
       - action: script.non_important_broadcast_alert_in_the_house
         data:
-          message: Front door remained opened
+          message: The front door has been left open!
       - delay:
           hours: 0
           minutes: 5
@@ -207,7 +204,8 @@
   mode: restart
 - id: '1713399927983'
   alias: Alert that the vacuum is stuck
-  description: ''
+  description: Sends a broadcast alert every 10 minutes announcing which room the
+    vacuum is stuck in, until it is no longer in error state.
   triggers:
   - entity_id:
     - vacuum.roborock_qrevo_curv_series
@@ -239,7 +237,8 @@
   mode: single
 - id: '1713407734344'
   alias: Lock back door when it is closed for 5 seconds
-  description: ''
+  description: Automatically locks the back door 5 seconds after it closes, ensuring
+    it is never left unlocked.
   trigger:
   - platform: state
     entity_id:
@@ -265,7 +264,8 @@
   mode: single
 - id: '1713407853586'
   alias: Lock back door 5 minutes after unlocking
-  description: ''
+  description: Re-locks the back door 5 minutes after it was unlocked, provided the
+    door is already closed. Prevents accidentally leaving the door unlocked.
   triggers:
   - entity_id:
     - lock.back_door
@@ -289,7 +289,8 @@
   mode: single
 - id: '1713408006382'
   alias: Turn back door lights on when someone is detected
-  description: ''
+  description: Turns on the back door light at full brightness when a person is detected
+    by any of the back entrance presence sensors or camera.
   triggers:
   - entity_id:
     - binary_sensor.back_entrance_presence_person_occupancy
@@ -424,7 +425,7 @@
   mode: single
 - id: '1713533595890'
   alias: Disarm alarm-away when "User Home" turns on
-  description: ''
+  description: Automatically disarms the away alarm when any resident arrives home.
   trigger:
   - platform: state
     entity_id:
@@ -444,7 +445,8 @@
   mode: single
 - id: '1713533768680'
   alias: Arm Alarm-Away when "User home" is off for 10 minutes
-  description: ''
+  description: Automatically arms the alarm in away mode after no residents have been
+    home for 10 minutes.
   triggers:
   - entity_id:
     - binary_sensor.user_home
@@ -474,7 +476,8 @@
   mode: single
 - id: '1713534223873'
   alias: Turn ACs on and Off  depending on house occupancy
-  description: ''
+  description: Sets AC preset to normal when residents are home, and switches to away
+    preset when the house is empty.
   triggers:
   - entity_id:
     - binary_sensor.user_home
@@ -511,7 +514,9 @@
   mode: single
 - id: '1713535684569'
   alias: Play Muzak in the bathroom when someone enters
-  description: ''
+  description: Plays the Bathroom Muzak playlist when motion is detected in the bathroom
+    and the door is closed. Volume adjusts based on door state. Does not interrupt
+    nearby speakers that are already playing.
   triggers:
   - entity_id:
     - binary_sensor.sensor_bathroom_motion_occupancy
@@ -581,7 +586,8 @@
   mode: restart
 - id: '1713536409397'
   alias: Raise music on the playing speaker when the Bathroom fans goes on
-  description: ''
+  description: Temporarily raises the bathroom speaker volume when the fan turns on
+    (while the door is closed), compensating for fan noise.
   triggers:
   - entity_id:
     - switch.bathroom_fan
